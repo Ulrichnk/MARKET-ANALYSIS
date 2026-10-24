@@ -4,7 +4,7 @@
 
 A progressive, research-style portfolio of **nine academic assignments** on fixed-income instruments, interest-rate term structures, pricing, and market-risk hedging.
 
-> **Current status:** Subject 01 published as an exercise statement. Mathematical solutions, tested Python implementations, notebooks, and results are not yet completed. The repository will distinguish work in progress from validated work.
+> **Current status:** Subject 01 substantially revised, with a 2026 ECB market-data study and additional proofs. Its solutions, tested pricing implementations, notebooks, data snapshot and empirical findings remain **to be completed**. The acquisition script has been published but has **not been successfully executed** here. The repository will distinguish work in progress from validated work.
 
 ## Research objectives
 
@@ -41,10 +41,17 @@ The syllabus follows Carol Alexander, *Market Risk Analysis*, Volume III, **Chap
 
 The document's LIBOR treatment is historical: the final synthetic LIBOR settings ceased on **30 September 2024** ([FCA](https://www.fca.org.uk/markets/libor-transition)). Later work will distinguish legacy models from modern overnight-index discounting and multi-curve pricing.
 
+## Official ECB dataset for Subject 01
+
+- [Academic Subject 01](subjects/01-interest-rates-discounting.md) — proof exercises, market data, and critical analysis.
+- [ECB dataset provenance](data/README.md) — definitions, official sources, and limitations.
+- [ECB acquisition script](scripts/download_ecb_yield_curve.py) — obtains sovereign AAA zero-coupon spot observations with explicit dates and a metadata manifest.
+- The older synthetic file is retained only as a **unit-test fixture**, never as real market evidence.
+
 ## Repository structure
 
 - `subjects/`: French academic problem statements; worked proofs to follow separately.
-- `data/`: synthetic public datasets, with provenance.
+- `data/`: official observations **when downloaded**, source manifests, and synthetic test fixtures.
 - `src/`: implementation modules (added as completed).
 - `tests/`: verification of mathematical identities and pricing routines.
 - `notebooks/`: computational experiments and annotated visualizations.
