@@ -1,91 +1,129 @@
-# Sujet 01 — Théorie des taux d'intérêt, actualisation et taux forward
+# Assignment 01 — Interest Rate Theory, Discounting, and Forward Rates
 
-**Niveau :** Master 2 avancé / doctorat (initiation)  
-**Source principale :** C. Alexander, *Market Risk Analysis*, vol. III, § III.1.2.1–III.1.2.5 (pp. 2–8).  
-**Approfondissements :** Björk (absence d’arbitrage), Tuckman–Serrat (conventions), Brigo–Mercurio (modèles de taux).  
-**Données empiriques :** estimations officielles BCE des taux spot zéro-coupon AAA en zone euro.  
-**Statut :** énoncé à résoudre ; aucune solution n'est présentée comme achevée.
+**Level:** Advanced Master's / Early Doctoral Studies  
+**Primary reference:** C. Alexander, *Market Risk Analysis*, Volume III, Sections III.1.2.1–III.1.2.5 (pp. 2–8).  
+**Further reading:** Björk (no-arbitrage theory), Tuckman and Serrat (market conventions), Brigo and Mercurio (interest rate models).  
+**Empirical data:** Official ECB estimates of euro-area AAA sovereign zero-coupon spot rates.  
+**Status:** **ASSIGNMENT RELEASED — NOT YET SOLVED.** No completed proofs, tested implementations, or empirical results are claimed.
 
-## Problématique
-Sous quelles hypothèses les taux spot, forward, simples, composés et continus sont-ils des représentations cohérentes des mêmes prix de marché, et quelles relations sont imposées par l'absence d'arbitrage ?
+## Research Question
 
-**Cadre :** dates 0 ≤ S < T en années, nominal N, valeur future V(T), facteur D(0,T)>0 avec D(0,0)=1. Les taux r sont continus, les taux R discrets; les forwards f_{n,m} et F_{n,m} ont pour *term* n et *tenor* m. Chaque taux doit mentionner fréquence, annualisation et convention de décompte. Ne pas assimiler forward de marché et espérance historique du taux futur. Les scénarios initiaux sont déterministes, sans défaut ni frictions; l'emprunt et le prêt au même taux sont admis pour démontrer les relations d'absence d'arbitrage. Ne pas assimiler une courbe de taux souverains AAA estimés à une courbe OIS collatéralisée.
+**Under which assumptions do spot, forward, simple, compounded, and continuously compounded interest rates provide financially consistent representations of the same market prices? What relationships are imposed by the absence of arbitrage?**
 
-## Partie A — Fondements (15 points)
-A1. Définir intérêt simple et intérêt composé; établir les facteurs d'accumulation et d'actualisation.  
-A2. À partir d'un taux nominal annuel R, démontrer la convergence de (1+R/m)^(mT) vers exp(RT), avec les conditions de positivité.  
-A3. Résoudre V'(t)=r(t)V(t) pour une fonction intégrable r(t); déduire la formule de capitalisation.  
-A4. Analyser les dimensions et unités; distinguer maturité, *term*, *tenor* et période d'accumulation avec une frise chronologique.  
-A5. Expliquer quelles hypothèses justifient A(0,T)=1/D(0,T). Distinguer D(0,T) et D(t,T) et interpréter leur signification financière.
+**Framework:** Let dates satisfy 0 ≤ S < T, measured in years. Let N denote the notional principal, V(T) a future value, and D(0,T)>0 the time-0 discount factor, with D(0,0)=1. Continuous rates are denoted by r; discrete rates by R. Forward rates f_{n,m} and F_{n,m} use n for the forward start (*term*) and m for the accrual period (*tenor*). Every rate must be accompanied by its compounding frequency, annualisation basis, and day-count convention. Do not identify a market-implied forward rate with the real-world expectation of a future short rate. Initial scenarios are deterministic, default-free, and frictionless; borrowing and lending at the assumed rates are permitted for the no-arbitrage arguments. **Do not treat an estimated AAA government yield curve as a collateralised OIS discount curve.**
 
-## Partie B — Spot et forward continus (20 points)
-B1. Définir r(0,T) à partir de D(0,T) et démontrer la relation de composition entre 0, S et T par deux stratégies sans arbitrage.  
-B2. Déduire la formule d'un taux forward continu moyen sur [S,T]. Retrouver la relation du manuel (III.1.3) à un et deux ans.  
-B3. Lorsque T↦D(0,T) est C¹, établir f(0,T)=−∂_T log D(0,T), sa forme intégrale et la relation entre spot moyen et forward instantané.  
-B4. Comparer courbe spot plate, croissante et non monotone; expliquer pourquoi un forward observé aujourd'hui n'est pas automatiquement l'espérance historique d'un futur spot.  
-B5. Pour les fonctions r(0,T)=a, r(0,T)=a+bT et r(0,T)=a+bT exp(−T), établir analytiquement D(0,T) et le forward instantané; les représenter.  
-B6. Tester puis démontrer ou réfuter l'affirmation : « toute courbe spot croissante implique des forwards instantanés croissants ».
+## Part A — Foundations (15 marks)
 
-## Partie C — Conventions et taux équivalents (20 points)
-C1. Démontrer la conversion entre taux continu r et taux nominal R capitalisé m fois par an. Préciser le domaine valide.  
-C2. Montrer que des taux équivalents donnent le même facteur d'actualisation, alors que la même valeur numérique sous deux conventions n'en donne généralement pas.  
-C3. Retrouver l'exemple III.1.1 du manuel (N=500, R=4 %, T=3,5 ans, capitalisation semestrielle) et comparer à une capitalisation continue au taux numérique de 4 %.  
-C4. Comparer la convention hybride du manuel (III.1.11) pour une maturité non entière avec la capitalisation fractionnaire; exemple T=1,4 et R=5 %.  
-C5. Calculer le nombre exact de jours entre le 15 janvier et le 17 avril 2026 puis le coupon d'un nominal de 10 M€ au taux annualisé de 3,2 % en ACT/360 et ACT/365F.  
-C6. Reprendre C3 et calculer le taux continu équivalent au taux semestriel de 4 %; vérifier que ce taux produit exactement le même montant final, contrairement à un taux continu numériquement égal à 4 %.  
-C7. Étudier le signe du taux et le domaine de validité des facteurs d'actualisation : D(0,T)>0 n'implique pas D(0,T)<1.
+**A1.** Define simple interest and compound interest. Derive the corresponding accumulation and discount factors.
 
-## Partie D — Spot et forward discrets (20 points)
-D1. Démontrer (III.1.17), puis généraliser la relation de produit (III.1.18) du manuel.  
-D2. Avec des taux spot annuels 1/2/3 ans de 5 %, 6 % et 6,5 %, calculer les forwards annuels successifs et vérifier les identités de non-arbitrage.  
-D3. Pour une fraction d'année α(S,T), dériver le forward simple annualisé à partir de D(0,S)/D(0,T).  
-D4. Examiner la notation F_{6,9} et les dates annoncées dans § III.1.2.4 du document. Le taux défini comme démarrant dans six mois pour un tenor neuf mois ne peut pas simultanément débuter au neuvième mois. Dessiner la chronologie correcte, identifier l'incohérence et expliquer la correction sans changer la convention de notation.  
-D5. Avec des taux spot simples annualisés de 4,5 %, 4,3 %, 4,2 % et 4,0 % à 3, 6, 9 et 12 mois, retrouver les forwards 3M consécutifs et un 6M-forward démarrant à 6M; expliciter les accrual factors et les produits sans arrondir.
+**A2.** Starting from an annual nominal interest rate R, prove the convergence of (1+R/m)^(mT) to exp(RT), stating any positivity and domain restrictions.
 
-## Partie E — Analyse empirique sur données réelles BCE et laboratoire Python (15 points)
+**A3.** Solve V'(t)=r(t)V(t) for an integrable interest-rate function r(t). Deduce the associated accumulation formula and identify the required regularity assumptions.
 
-**Source obligatoire :** [BCE — euro area yield curves](https://www.ecb.europa.eu/stats/financial_markets_and_interest_rates/euro_area_yield_curves/html/index.en.html), [BCE — dataset YC](https://data.ecb.europa.eu/data/datasets/YC). Les taux publiés sont des **estimations zéro-coupon de titres souverains** selon Svensson, exprimées en **pourcentage annuel composé continûment**. Ils ne sont **pas** des taux OIS ou des prix d'obligations cotés individuellement à toutes les maturités.
+**A4.** Examine the dimensions and units involved. Distinguish maturity, *term*, *tenor*, and accrual period using a labelled timeline.
 
-Télécharger via le script dans scripts/download_ecb_yield_curve.py les séries AAA pour 3M, 6M, 1Y, 2Y, 3Y, 5Y, 7Y, 10Y et, en option, 15Y, 20Y, 30Y. Exemple de clé exacte : **YC.B.U2.EUR.4F.G_N_A.SV_C_YM.SR_1Y**. Période : 2026-09-01 à 2026-10-23. Date d'analyse préférée : 2026-10-22, **uniquement si toutes les séries y sont présentes** ; comparer à une seconde date commune un mois avant. Les observations **ne sont pas incluses** tant qu'une extraction réussie n'a pas été effectuée.
+**A5.** Explain the assumptions justifying A(0,T)=1/D(0,T). Distinguish D(0,T) from D(t,T) and explain their financial meanings.
 
-E1. Établir un dictionnaire des données avec identifiants des séries, dates de référence, date d'extraction, unités et observations manquantes. Montrer la conversion des données publiées en % vers le taux décimal.
+## Part B — Continuously Compounded Spot and Forward Rates (20 marks)
 
-E2. Développer discount_continuous, discount_simple, discount_compound, nominal_to_continuous, continuous_to_nominal, forward_continuous et forward_simple, avec domaines de validité et paramètres explicites.
+*Alexander, Section III.1.2.1; Equations (III.1.1)–(III.1.4).*
 
-E3. À partir des spots BCE à une date commune, reconstruire D(0,T), puis les forwards moyens sur [3M,6M], [6M,1Y], [1Y,2Y], [2Y,3Y], [3Y,5Y] et [5Y,10Y]. Pour cette première expérience fixer explicitement alpha(S,T)=T-S; indiquer pourquoi les conventions ACT réelles devront être intégrées ultérieurement.
+**B1.** Define the continuously compounded spot rate r(0,T) in terms of D(0,T). Use two no-arbitrage investment strategies to establish the relationship linking time 0, S, and T.
 
-E4. Ajouter au moins **dix tests indépendants** (réciprocité, équivalence, composition, continuité, unités, cas limites, taux négatifs admissibles et données manquantes). Fixer et justifier les tolérances.
+**B2.** Derive the continuously compounded average forward rate over [S,T]. Recover the textbook relationship (III.1.3) for the one-year and two-year maturities.
 
-E5. Produire quatre figures : (1) deux courbes spot BCE, (2) deux courbes de facteurs d'actualisation, (3) forwards moyens par segment, (4) mouvements historiques en points de base. Identifier clairement les taux observés, les taux calculés et les interpolations éventuelles.
+**B3.** Assuming that T ↦ D(0,T) is positive and continuously differentiable, derive f(0,T)=−∂_T log D(0,T). Establish the corresponding integral representation and the relationship between the average spot rate and the instantaneous forward rate.
 
-E6. Retirer une maturité, la reconstituer par interpolation annoncée et quantifier l'écart avec le taux BCE. Expliquer pourquoi l'ajustement statistique ne suffit pas à établir l'absence d'arbitrage.
+**B4.** Compare flat, upward-sloping, and non-monotonic spot curves. Explain why a forward rate observed today is not automatically the expectation, under the physical probability measure, of a future spot rate.
 
-**Bonus :** comparer le taux forward instantané BCE IF_1Y ou IF_2Y avec un forward moyen sur une période finie.
+**B5.** For r(0,T)=a, r(0,T)=a+bT, and r(0,T)=a+bT exp(−T), derive D(0,T) and the instantaneous forward rate analytically. Plot and interpret the results.
 
-**Attention :** l'ancien data/spot_curve_synthetic.csv reste uniquement un jeu de données **synthétiques de tests**, et ne doit jamais être présenté comme une observation réelle.
+**B6.** Investigate the assertion: “Every increasing spot-rate curve implies an increasing instantaneous forward-rate curve.” Prove the claim under suitable conditions or disprove it by constructing a counterexample.
 
-## Partie F — Réflexion critique (10 points)
-F1. Expliquer le rôle historique de LIBOR dans § III.1.2.5 : pourquoi il ne faut pas présenter LIBOR comme référence vivante en 2026 (publication finale le 30/09/2024) ? Distinguer €STR, Euribor et taux souverains AAA. Sources : https://www.fca.org.uk/news/press-releases/end-libor ; https://www.ecb.europa.eu/stats/financial_markets_and_interest_rates/euro_short-term_rate/html/index.en.html ; https://www.emmi-benchmarks.eu/benchmarks/euribor/.  
-F1bis. Retrouver un fixing quotidien vérifiable de €STR et distinguer date d'observation, date de publication et tenor.  
-F2. Essai argumentatif (700–1000 mots) : « Pourquoi les facteurs d'actualisation sont-ils plus fondamentaux que les cotations de taux ? » Discuter conventions, prix, arbitrage et hypothèses du cadre.
+## Part C — Conventions and Equivalent Interest Rates (20 marks)
 
-## Livrables attendus pour marquer ce sujet terminé
-1. Démonstrations et calculs personnels dans `reports/01_interest_rates.md`.
-2. Fonctions Python avec signatures explicites dans `src/rates/`, accompagnées de notes d'hypothèses.
-3. Tests reproductibles dans `tests/test_01_rates.py`.
-4. Notebook `notebooks/01_interest_rates.ipynb`, graphes issus des séries officielles BCE et analyse des quatre graphiques.  
-5. Conserver les données BCE et leur manifeste de provenance (voir data/README.md).
-6. Résumé critique des résultats dans `results/01-summary.md`.
+**C1.** Prove the conversion formula between a continuously compounded rate r and an annual nominal rate R compounded m times per year. State the admissible domain.
 
-**Sources :** *Market Risk Analysis* III.1.2, équations III.1.1 à III.1.18 et exemples III.1.1–III.1.3. Travail original inspiré du chapitre et non transcription du manuel.
+**C2.** Show that financially equivalent rates produce identical discount factors. Explain why rates with the same numerical value under different conventions generally do not.
 
-## Bibliographie scientifique élargie
+**C3.** Reproduce Example III.1.1 from the textbook (N=500, R=4%, T=3.5 years, semiannual compounding). Compare the result with continuous compounding at the **numerically identical** rate of 4%.
 
-- Carol Alexander, *Market Risk Analysis*, vol. III, § III.1.2.1–III.1.2.5 : trame du sujet, terminologie, exemples III.1.1–III.1.3 et relations III.1.1–III.1.18.
-- Tomas Björk, *Arbitrage Theory in Continuous Time*, 4e éd. : approfondissement de la logique sans arbitrage, sans importer sans justification les hypothèses stochastiques plus avancées.
-- Bruce Tuckman et Angel Serrat, *Fixed Income Securities* : conventions de marché et interprétations.
-- Damiano Brigo et Fabio Mercurio, *Interest Rate Models: Theory and Practice* : extension ultérieure aux cadres de taux avancés.
-- BCE : [Yield curves — methodology](https://data.ecb.europa.eu/methodology/yield-curves) et [YC dataset](https://data.ecb.europa.eu/data/datasets/YC).
-- FCA : [The end of LIBOR](https://www.fca.org.uk/news/press-releases/end-libor).
+**C4.** Compare the textbook's hybrid convention in Equation (III.1.11), for a non-integer maturity, with fractional-period compound interest. Use T=1.4 and R=5%.
 
-**Condition de validation :** aucune partie n'est déclarée terminée sans preuves, tests vérifiés et données correctement sourcées. Les calculs restent à réaliser par l'étudiant.
+**C5.** Determine the exact number of days from 15 January to 17 April 2026. Calculate the interest on a €10 million notional at an annualised rate of 3.2% using ACT/360 and ACT/365F. Explain the numerical difference.
+
+**C6.** Revisit C3 and calculate the continuously compounded rate **equivalent** to 4% with semiannual compounding. Verify that it produces exactly the same terminal value, unlike a continuously compounded rate merely equal to 4% numerically.
+
+**C7.** Analyse admissible negative rates and the domain of discount factors. Explain why D(0,T)>0 does **not** imply D(0,T)<1.
+
+## Part D — Discretely Compounded Spot and Forward Rates (20 marks)
+
+*Alexander, Section III.1.2.4; Equations (III.1.17)–(III.1.18).*
+
+**D1.** Derive Equation (III.1.17) from no-arbitrage reasoning and generalise the product identity in Equation (III.1.18).
+
+**D2.** Given annual-compounding spot rates of 5%, 6%, and 6.5% at maturities of 1, 2, and 3 years, respectively, calculate the successive annual forward rates and verify the no-arbitrage accumulation identities.
+
+**D3.** Given a year fraction α(S,T), derive the annualised simple forward rate in terms of D(0,S)/D(0,T). Specify the units and the day-count assumptions.
+
+**D4 — Critical reading of the source.** Examine the notation F_{6,9} and the dates stated in Section III.1.2.4. A forward rate starting in six months with a nine-month tenor cannot simultaneously start in month nine. Draw the consistent timeline, identify the inconsistency, and explain the correction while preserving the notation convention.
+
+**D5.** Given annualised simple spot rates of 4.5%, 4.3%, 4.2%, and 4.0% at 3, 6, 9, and 12 months, respectively, reconstruct the successive three-month forwards and a six-month forward starting in six months. State all accrual factors and verify the accumulation identities without intermediate rounding.
+
+## Part E — Empirical Research with Official ECB Data and a Python Laboratory (15 marks)
+
+**Mandatory data source:** [ECB — Euro Area Yield Curves](https://www.ecb.europa.eu/stats/financial_markets_and_interest_rates/euro_area_yield_curves/html/index.en.html) and [ECB — YC Dataset](https://data.ecb.europa.eu/data/datasets/YC).
+
+The reported series are **Svensson-based estimates of sovereign zero-coupon yields**, quoted as **annual percentages with continuous compounding**. They are **not** OIS rates, nor are they individually traded bond prices for every quoted maturity.
+
+Use the script at `scripts/download_ecb_yield_curve.py` to retrieve AAA-series observations for maturities 3M, 6M, 1Y, 2Y, 3Y, 5Y, 7Y, and 10Y, with optional 15Y, 20Y, and 30Y series. An example full series key is **YC.B.U2.EUR.4F.G_N_A.SV_C_YM.SR_1Y**.
+
+**Requested observation window:** 1 September–23 October 2026. Prefer **22 October 2026** for the first cross-sectional analysis **only if all required series have observations on that date**. Compare it with a second common observation date approximately one month earlier. **No market observations are supplied or assumed unless the download has completed successfully.**
+
+**E1.** Produce a data dictionary identifying series keys, observation dates, retrieval dates, units, missing values, and the rule used to select common observation dates. Demonstrate the conversion from percentages to decimal rates.
+
+**E2.** Implement `discount_continuous`, `discount_simple`, `discount_compound`, `nominal_to_continuous`, `continuous_to_nominal`, `forward_continuous`, and `forward_simple`. Document all parameters and admissible domains.
+
+**E3.** Reconstruct D(0,T) from ECB spot estimates observed on a common date. Calculate average forward rates over [3M,6M], [6M,1Y], [1Y,2Y], [2Y,3Y], [3Y,5Y], and [5Y,10Y]. For this first experiment, explicitly set α(S,T)=T−S. Explain why contractual ACT-based accrual factors may differ.
+
+**E4.** Implement at least **ten independent tests**, including inverse relationships, equivalence across conventions, discount-factor decomposition, continuity, unit consistency, boundary cases, admissible negative rates, and missing observations. Specify and justify numerical tolerances.
+
+**E5.** Produce and interpret four charts: **(1)** ECB spot curves on two dates; **(2)** the corresponding discount-factor curves; **(3)** average forwards by maturity segment; **(4)** historical changes in basis points. Identify market-derived observations, calculated rates, and any interpolation.
+
+**E6.** Remove one maturity, reconstruct it through a clearly specified interpolation method, and measure the difference from the corresponding ECB estimate. Discuss why a good statistical fit alone does not establish the absence of arbitrage.
+
+**Optional extension:** Compare an ECB instantaneous forward-rate estimate (e.g., IF_1Y or IF_2Y) with an average forward rate over a finite interval.
+
+**Data-integrity warning:** The existing `data/spot_curve_synthetic.csv` file is a **synthetic testing dataset**. It must never be described as historical market data.
+
+## Part F — Critical Analysis (10 marks)
+
+**F1.** Explain the historical role of LIBOR in Section III.1.2.5 and why it must not be treated as a currently published benchmark in 2026 (final LIBOR publication: 30 September 2024). Distinguish €STR, Euribor, and AAA government yields. Refer to the [FCA LIBOR notice](https://www.fca.org.uk/news/press-releases/end-libor), the [ECB €STR page](https://www.ecb.europa.eu/stats/financial_markets_and_interest_rates/euro_short-term_rate/html/index.en.html), and [EMMI Euribor](https://www.emmi-benchmarks.eu/benchmarks/euribor/).
+
+**F1b.** Locate an independently verifiable daily €STR fixing. Distinguish its reference date, publication date, and tenor.
+
+**F2 — Research essay (700–1,000 words).** Discuss the proposition: **“Why are discount factors more fundamental than interest-rate quotation conventions?”** Support your response with a no-arbitrage argument, a numerical illustration, and at least two limitations of the deterministic framework.
+
+## Required Deliverables and Completion Criteria
+
+1. **`reports/01_interest_rates.md`:** independently derived proofs, calculations, assumptions, and critical discussion.
+2. **`src/rates/`:** documented Python functions with explicit signatures and assumptions.
+3. **`tests/test_01_rates.py`:** reproducible unit tests with justified tolerances.
+4. **`notebooks/01_interest_rates.ipynb`:** reproducible analysis and interpretation of the four ECB-market-data charts.
+5. **`data/`:** authenticated ECB observations and a provenance manifest; see `data/README.md`.
+6. **`results/01-summary.md`:** concise account of verified findings, discrepancies, and limitations.
+
+**Mark allocation:** Part A: 15; Part B: 20; Part C: 20; Part D: 20; Part E: 15; Part F: 10. **Total: 100 marks.**
+
+**Scientific completion standard:** This assignment may be marked **Complete** only after proofs have been checked, tests executed successfully, empirical figures reproduced from documented sources, and limitations critically evaluated. Publishing an assignment statement does not mean that its research has been completed.
+
+## References
+
+- **Carol Alexander**, *Market Risk Analysis*, Volume III, Section III.1.2.1–III.1.2.5: the principal syllabus, historical examples III.1.1–III.1.3, and Equations III.1.1–III.1.18. The questions in this assignment are original and are not a transcription of the source.
+- **Tomas Björk**, *Arbitrage Theory in Continuous Time*, 4th ed.: supplementary foundations of arbitrage theory, without importing advanced stochastic assumptions without justification.
+- **Bruce Tuckman and Angel Serrat**, *Fixed Income Securities*: market conventions and fixed-income interpretation.
+- **Damiano Brigo and Fabio Mercurio**, *Interest Rate Models: Theory and Practice*: later extensions to advanced interest-rate models.
+- **European Central Bank**, [Yield Curve Methodology](https://data.ecb.europa.eu/methodology/yield-curves) and [YC Dataset](https://data.ecb.europa.eu/data/datasets/YC).
+- **Financial Conduct Authority**, [The End of LIBOR](https://www.fca.org.uk/news/press-releases/end-libor).
+
+**Scope limitation:** Estimated AAA sovereign yields must not be silently substituted for collateralised OIS discount rates. Multi-curve pricing, swap valuation, and fully stochastic rate models belong to later assignments.
